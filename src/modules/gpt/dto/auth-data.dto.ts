@@ -7,7 +7,7 @@ import { IsString, IsEmail, MinLength, MaxLength} from 'class-validator';
 /**
  * DTO for user registration
  */
-export class RegisterUserDto {
+export class RegisterDto {
   @ApiProperty({
     description: 'Unique username chosen by the user',
     example: 'sakdoumz123',
@@ -39,4 +39,22 @@ export class RegisterUserDto {
   })
   @IsString()
   displayName: string;
+}
+
+export class UserDto {
+    @ApiProperty()
+    @IsString()
+    uid: string;
+
+    @ApiProperty()
+    @IsString()
+    username: string;
+
+    @ApiProperty()
+    @IsString()
+    avatar: string;
+
+    @ApiProperty()
+    @IsString()
+    email: string;
 }
