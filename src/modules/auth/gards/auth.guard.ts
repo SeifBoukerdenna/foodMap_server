@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Injectable,
   CanActivate,
@@ -48,16 +51,16 @@ export class AuthGuard implements CanActivate {
 
     try {
       // For Firebase auth
-      if (token.startsWith('Firebase ')) {
-        const firebaseToken = token.split('Firebase ')[1];
-        const decodedToken =
-          await this.firebaseService.verifyToken(firebaseToken);
+      // if (token.startsWith('Firebase ')) {
+      //   const firebaseToken = token.split('Firebase ')[1];
+      //   const decodedToken =
+      //     await this.firebaseService.verifyToken(firebaseToken);
 
-        // Safe type casting with our custom interface
-        (request as RequestWithUser).user =
-          decodedToken as FirebaseDecodedIdToken;
-        return true;
-      }
+      //   // Safe type casting with our custom interface
+      //   (request as RequestWithUser).user =
+      //     decodedToken as FirebaseDecodedIdToken;
+      //   return true;
+      // }
 
       // For JWT auth
       const jwtSecret = this.configService.get<string>('jwt.secret');

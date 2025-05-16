@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/modules/gpt/gpt.service.ts
 
 import { Injectable, Logger } from '@nestjs/common';
