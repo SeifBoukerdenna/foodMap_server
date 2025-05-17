@@ -116,6 +116,51 @@ export class AuthService {
     }
   }
 
+  async sendVerificationEmail(email: string): Promise<{ success: boolean }> {
+    try {
+      const userRecord = await this.firebase.getAuth().getUserByEmail(email);
+
+      if (userRecord.emailVerified) {
+        return { success: true }; // Already verified, nothing to do
+      }
+
+      // Generate a verification link
+      const actionCodeSettings = {
+        url: process.env.FRONTEND_URL || 'http://localhost:3000', // URL to redirect back to your app
+        handleCodeInApp: true,
+      };
+
+      const link = await this.firebase
+        .getAuth()
+        .generateEmailVerificationLink(email, actionCodeSettings);
+
+      // Here you would typically send an email with the link
+      // For now we'll just log it for testing
+      console.log('Verification link:', link);
+
+      return { success: true };
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Send verification email error: ${errorMessage}`);
+      throw error;
+    }
+  }
+
+  async checkEmailVerificationStatus(
+    email: string,
+  ): Promise<{ isVerified: boolean }> {
+    try {
+      const userRecord = await this.firebase.getAuth().getUserByEmail(email);
+      return { isVerified: userRecord.emailVerified };
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Check verification status error: ${errorMessage}`);
+      throw error;
+    }
+  }
+
   private async isEmailTaken(email: string): Promise<boolean> {
     try {
       await this.firebase.getAuth().getUserByEmail(email);

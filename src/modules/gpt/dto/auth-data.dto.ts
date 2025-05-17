@@ -100,3 +100,20 @@ export class AuthResponseDto {
   })
   user: UserDto;
 }
+
+export class VerifyEmailDto {
+  @ApiProperty({
+    description: 'Email to send verification to',
+    example: 'user@example.com',
+  })
+  @IsEmail()
+  email: string;
+}
+
+export class VerificationStatusDto {
+  @ApiProperty({
+    description: 'Whether the email is verified',
+    example: true,
+  })
+  isVerified: boolean;
+}

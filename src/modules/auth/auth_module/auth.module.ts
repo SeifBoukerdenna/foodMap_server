@@ -23,6 +23,10 @@ import { UserModule } from 'src/modules/user/user.module';
           'dev-secret-key-change-in-production',
         signOptions: {
           expiresIn: configService.get<string>('jwt.expiresIn') || '1d',
+          algorithm: 'HS256',
+        },
+        verifyOptions: {
+          algorithms: ['HS256'],
         },
       }),
     }),

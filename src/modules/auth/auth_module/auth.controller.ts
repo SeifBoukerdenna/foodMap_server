@@ -1,6 +1,7 @@
 // src/modules/gpt/auth.controller.ts
 
 import {
+  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -15,6 +16,8 @@ import {
   LoginDto,
   VerifyTokenDto,
   AuthResponseDto,
+  VerifyEmailDto,
+  VerificationStatusDto,
 } from 'src/modules/gpt/dto/auth-data.dto';
 import {
   EmailAlreadyExistsError,
@@ -122,6 +125,53 @@ export class AuthController {
       return await this.authService.verifyToken(token);
     } catch (error) {
       throw new UnauthorizedException('Invalid token ', error as string);
+    }
+  }
+
+  @Post('send-verification-email')
+  @ApiOperation({
+    summary: 'Send verification email',
+    description: 'Sends a verification email to the user',
+  })
+  @ApiBody({ type: VerifyEmailDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Verification email sent successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'User not found or email already verified',
+  })
+  async sendVerificationEmail(@Body() data: VerifyEmailDto) {
+    try {
+      return await this.authService.sendVerificationEmail(data.email);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  @Post('verify-email-status')
+  @ApiOperation({
+    summary: 'Check email verification status',
+    description: "Checks if a user's email is verified",
+  })
+  @ApiBody({ type: VerifyEmailDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns verification status',
+    type: VerificationStatusDto,
+  })
+  async verifyEmailStatus(@Body() data: VerifyEmailDto) {
+    try {
+      return await this.authService.checkEmailVerificationStatus(data.email);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
     }
   }
 }
