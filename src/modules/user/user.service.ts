@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UserData } from './user';
 import { FirebaseService } from '../firebase/firebase.service';
 
@@ -6,6 +6,8 @@ type UidDocument = { uid: string };
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   constructor(private firebase: FirebaseService) {}
 
   async getEmailByUsername(username: string): Promise<string | null> {
@@ -17,6 +19,7 @@ export class UserService {
   }
 
   async setUserData(uid: string, userData: UserData) {
+    this.logger.log(`Setting user data for UID: ${uid}`);
     const userRef = this.getUidToUserDataRef(uid);
     return userRef.set(userData);
   }
@@ -27,6 +30,7 @@ export class UserService {
     if (user.exists) {
       return user.data() as UserData;
     } else {
+      this.logger.warn(`No user data found for UID: ${uid}`);
       return null;
     }
   }
@@ -52,6 +56,7 @@ export class UserService {
   }
 
   async setUsernameToUid(username: string, uid: string) {
+    this.logger.log(`Setting username ${username} to UID: ${uid}`);
     const usernameLowerCase = username.toLowerCase();
 
     const usernameRef = this.getUsernamesToUidRef(usernameLowerCase);
@@ -77,6 +82,9 @@ export class UserService {
     email: string | null = null,
     displayName: string,
   ): UserData {
+    this.logger.log(
+      `Creating default user data for UID: ${uid}, username: ${username}, displayName: ${displayName}`,
+    );
     return {
       uid,
       username,
