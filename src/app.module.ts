@@ -8,6 +8,9 @@ import * as Joi from 'joi';
 // Import modules
 import { GptModule } from './modules/gpt/gpt.module';
 import configuration from './config/configuration';
+import { FirebaseModule } from './modules/firebase/firebase.module';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth_module/auth.module';
 
 @Module({
   imports: [
@@ -32,9 +35,16 @@ import configuration from './config/configuration';
         FIREBASE_PRIVATE_KEY: Joi.string().optional(),
         FIREBASE_CLIENT_EMAIL: Joi.string().optional(),
         // Authentication bypass flag
-        DISABLE_AUTH: Joi.boolean().default(true),
+        DISABLE_AUTH: Joi.boolean().default(false),
       }),
     }),
+
+    FirebaseModule, // Load FirebaseModule first
+    UserModule, // Then UserModule which depends on FirebaseModule
+    AuthModule, // Then AuthModule which depends on both
+
+    // Feature modules
+    GptModule,
 
     // Rate limiting with relaxed configuration
     ThrottlerModule.forRootAsync({
@@ -48,9 +58,6 @@ import configuration from './config/configuration';
         },
       ],
     }),
-
-    // Feature modules
-    GptModule,
   ],
 })
 export class AppModule {}

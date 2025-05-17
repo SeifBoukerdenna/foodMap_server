@@ -1,13 +1,15 @@
 // src/modules/gpt/gpt.controller.ts
 
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GptService } from './gpt.service';
 import { ChatCompletionRequestDto } from './dto/chat-completion-request.dto';
 import { RestaurantSuggestionsRequestDto } from './dto/restaurant-suggestions-request.dto';
+import { AuthGuard } from '../auth/gards/auth.guard';
 
 @ApiTags('gpt')
 @Controller('gpt')
+@UseGuards(AuthGuard) // Add this line to protect all routes
 export class GptController {
   constructor(private readonly gptService: GptService) {}
 

@@ -1,8 +1,25 @@
-/* eslint-disable prettier/prettier */
-// src/modules/auth/dto/register-user.dto.ts
+// src/modules/auth/dto/auth-data.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEmail, MinLength, MaxLength} from 'class-validator';
+import { IsString, IsEmail, MinLength, MaxLength } from 'class-validator';
+
+export class UserDto {
+  @ApiProperty()
+  @IsString()
+  uid: string;
+
+  @ApiProperty()
+  @IsString()
+  username: string;
+
+  @ApiProperty()
+  @IsString()
+  avatar: string;
+
+  @ApiProperty()
+  @IsString()
+  email: string;
+}
 
 /**
  * DTO for user registration
@@ -41,20 +58,45 @@ export class RegisterDto {
   displayName: string;
 }
 
-export class UserDto {
-    @ApiProperty()
-    @IsString()
-    uid: string;
+// Login DTO
+export class LoginDto {
+  @ApiProperty({
+    description: 'User email',
+    example: 'user@example.com',
+  })
+  @IsEmail()
+  email: string;
 
-    @ApiProperty()
-    @IsString()
-    username: string;
+  @ApiProperty({
+    description: 'User password',
+    example: 'securePassword123',
+  })
+  @IsString()
+  @MinLength(6)
+  password: string;
+}
 
-    @ApiProperty()
-    @IsString()
-    avatar: string;
+// Verify Token DTO
+export class VerifyTokenDto {
+  @ApiProperty({
+    description: 'Firebase ID Token',
+    example:
+      'eyJhbGciOiJSUzI1NiIsImtpZCI6IjFmODhiODE0MjljYzQ1MWEzMzVjMmY1Y2RiM2RmYjM0ZWIzYmJjN2YiLCJ0eXAiOiJKV1QifQ...',
+  })
+  @IsString()
+  token: string;
+}
 
-    @ApiProperty()
-    @IsString()
-    email: string;
+// Auth Response DTO
+export class AuthResponseDto {
+  @ApiProperty({
+    description: 'Authentication token',
+  })
+  token: string;
+
+  @ApiProperty({
+    description: 'User data',
+    type: UserDto,
+  })
+  user: UserDto;
 }

@@ -43,6 +43,6 @@ export default () => ({
   },
   // Auth bypass flag
   auth: {
-    disabled: process.env.DISABLE_AUTH === 'true' || true,
+    disabled: process.env.DISABLE_AUTH === 'true',
   },
 });

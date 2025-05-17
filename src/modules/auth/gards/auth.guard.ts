@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Injectable,
   CanActivate,
@@ -9,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { FirebaseService } from '../../../firebase/firebase.service';
 import { Request } from 'express';
+import { FirebaseService } from 'src/modules/firebase/firebase.service';
 
 // Define JWT payload structure
 interface JwtPayload {
@@ -51,16 +48,27 @@ export class AuthGuard implements CanActivate {
 
     try {
       // For Firebase auth
-      // if (token.startsWith('Firebase ')) {
-      //   const firebaseToken = token.split('Firebase ')[1];
-      //   const decodedToken =
-      //     await this.firebaseService.verifyToken(firebaseToken);
+      if (token.startsWith('Firebase ')) {
+        const firebaseToken = token.split('Firebase ')[1];
+        try {
+          const decodedToken = await this.firebaseService
+            .getAuth()
+            .verifyIdToken(firebaseToken);
 
-      //   // Safe type casting with our custom interface
-      //   (request as RequestWithUser).user =
-      //     decodedToken as FirebaseDecodedIdToken;
-      //   return true;
-      // }
+          // Safe type casting with our custom interface
+          (request as RequestWithUser).user = {
+            email: decodedToken.email,
+            ...decodedToken,
+          };
+          return true;
+        } catch (error) {
+          // Fix: properly type the error and safely access message property
+          const errorMessage =
+            error instanceof Error ? error.message : 'Unknown error';
+          console.error(`Firebase token verification error: ${errorMessage}`);
+          throw new UnauthorizedException('Invalid Firebase token');
+        }
+      }
 
       // For JWT auth
       const jwtSecret = this.configService.get<string>('jwt.secret');
