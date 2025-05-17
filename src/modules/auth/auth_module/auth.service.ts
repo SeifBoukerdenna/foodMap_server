@@ -121,23 +121,13 @@ export class AuthService {
       const userRecord = await this.firebase.getAuth().getUserByEmail(email);
 
       if (userRecord.emailVerified) {
-        return { success: true }; // Already verified, nothing to do
+        throw new Error('Email already verified');
       }
 
-      // Generate a verification link
-      const actionCodeSettings = {
-        url: process.env.FRONTEND_URL || 'http://localhost:3000', // URL to redirect back to your app
-        handleCodeInApp: true,
-      };
+      await this.firebase.getAuth().generateEmailVerificationLink(email);
 
-      const link = await this.firebase
-        .getAuth()
-        .generateEmailVerificationLink(email, actionCodeSettings);
-
-      // Here you would typically send an email with the link
-      // For now we'll just log it for testing
-      console.log('Verification link:', link);
-
+      // For actual implementation, you'd send the email here
+      // For now, just return success
       return { success: true };
     } catch (error) {
       const errorMessage =

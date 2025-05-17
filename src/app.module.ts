@@ -1,4 +1,4 @@
-// src/app.module.ts
+// src/app.module.ts - Update to include AppCheckModule
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -11,6 +11,7 @@ import configuration from './config/configuration';
 import { FirebaseModule } from './modules/firebase/firebase.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth_module/auth.module';
+import { AppCheckModule } from './modules/app-check/app-check.module'; // Add this import
 
 @Module({
   imports: [
@@ -36,12 +37,15 @@ import { AuthModule } from './modules/auth/auth_module/auth.module';
         FIREBASE_CLIENT_EMAIL: Joi.string().optional(),
         // Authentication bypass flag
         DISABLE_AUTH: Joi.boolean().default(false),
+        // App Check bypass flag
+        DISABLE_APP_CHECK: Joi.boolean().default(false),
       }),
     }),
 
     FirebaseModule, // Load FirebaseModule first
     UserModule, // Then UserModule which depends on FirebaseModule
     AuthModule, // Then AuthModule which depends on both
+    AppCheckModule, // Add App Check Module
 
     // Feature modules
     GptModule,

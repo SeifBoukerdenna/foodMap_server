@@ -5,8 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FirebaseModule } from '../../firebase/firebase.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '../gards/auth.guard';
 import { UserModule } from 'src/modules/user/user.module';
+import { SimpleAuthGuard } from '../gards/auth.guard';
 
 @Global() // Make it global to share providers
 @Module({
@@ -32,7 +32,7 @@ import { UserModule } from 'src/modules/user/user.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, AuthGuard],
-  exports: [AuthService, AuthGuard, JwtModule, FirebaseModule], // Export FirebaseModule too
+  providers: [AuthService, SimpleAuthGuard],
+  exports: [AuthService, SimpleAuthGuard, JwtModule, FirebaseModule], // Export FirebaseModule too
 })
 export class AuthModule {}

@@ -5,11 +5,12 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GptService } from './gpt.service';
 import { ChatCompletionRequestDto } from './dto/chat-completion-request.dto';
 import { RestaurantSuggestionsRequestDto } from './dto/restaurant-suggestions-request.dto';
-import { AuthGuard } from '../auth/gards/auth.guard';
+import { AppCheckGuard } from '../app-check/app-check.guard';
+import { SimpleAuthGuard } from '../auth/gards/auth.guard';
 
 @ApiTags('gpt')
 @Controller('gpt')
-@UseGuards(AuthGuard) // Add this line to protect all routes
+@UseGuards(SimpleAuthGuard, AppCheckGuard) // Use SimpleAuthGuard instead of AuthGuard
 export class GptController {
   constructor(private readonly gptService: GptService) {}
 

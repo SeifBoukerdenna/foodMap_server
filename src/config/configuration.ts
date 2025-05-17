@@ -45,4 +45,7 @@ export default () => ({
   auth: {
     disabled: process.env.DISABLE_AUTH === 'true',
   },
+  appCheck: {
+    disabled: process.env.DISABLE_APP_CHECK === 'true',
+  },
 });
