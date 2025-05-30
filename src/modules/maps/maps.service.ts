@@ -169,6 +169,11 @@ export class MapsService {
         },
       });
 
+      console.log(
+        '🔍 Raw Google API response:',
+        JSON.stringify(response.data, null, 2),
+      );
+
       return {
         routes: response.data.routes.map((route) => ({
           legs: route.legs.map((leg) => ({
