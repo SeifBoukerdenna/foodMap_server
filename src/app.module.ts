@@ -12,6 +12,7 @@ import { FirebaseModule } from './modules/firebase/firebase.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth_module/auth.module';
 import { AppCheckModule } from './modules/app-check/app-check.module'; // Add this import
+import { MapsModule } from './modules/maps/maps.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { AppCheckModule } from './modules/app-check/app-check.module'; // Add th
 
     // Feature modules
     GptModule,
+    MapsModule,
 
     // Rate limiting with relaxed configuration
     ThrottlerModule.forRootAsync({
