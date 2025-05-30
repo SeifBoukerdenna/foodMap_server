@@ -1,4 +1,4 @@
-// src/modules/gpt/auth.controller.ts
+// src/modules/auth/auth_module/auth.controller.ts
 
 import {
   BadRequestException,
@@ -18,6 +18,7 @@ import {
   AuthResponseDto,
   VerifyEmailDto,
   VerificationStatusDto,
+  CheckUsernameDto,
 } from 'src/modules/gpt/dto/auth-data.dto';
 import {
   EmailAlreadyExistsError,
@@ -102,6 +103,33 @@ export class AuthController {
       }
       throw error;
     }
+  }
+
+  // NEW ENDPOINT TO CHECK USERNAME AVAILABILITY
+  @Post('check-username')
+  @ApiOperation({
+    summary: 'Check if a username is already taken',
+    description: 'Returns whether the username is already in use',
+  })
+  @ApiBody({ type: CheckUsernameDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Username availability check result',
+    schema: {
+      type: 'object',
+      properties: {
+        exists: {
+          type: 'boolean',
+          description: 'Whether the username is already taken',
+        },
+      },
+    },
+  })
+  async checkUsername(@Body() data: CheckUsernameDto) {
+    const exists = await this.userService.isUsernameTaken(
+      data.username.toLowerCase(),
+    );
+    return { exists };
   }
 
   @Post('verify-token')

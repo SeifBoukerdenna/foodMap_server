@@ -58,6 +58,18 @@ export class RegisterDto {
   displayName: string;
 }
 
+// NEW DTO for username check
+export class CheckUsernameDto {
+  @ApiProperty({
+    description: 'Username to check for availability',
+    example: 'sakdoumz123',
+  })
+  @IsString()
+  @MinLength(3)
+  @MaxLength(20)
+  username: string;
+}
+
 // Login DTO
 export class LoginDto {
   @ApiProperty({
